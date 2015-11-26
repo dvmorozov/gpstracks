@@ -6,6 +6,8 @@ inFileName = 'c:\\temp\\good.gpx'
 outFileName = 'c:\\temp\\gps.gpx'
 pointFileName = 'c:\\temp\\points.json'
 
+drawMesh = True
+
 step = 1.0
 
 ET.register_namespace('', "http://www.topografix.com/GPX/1/0")
@@ -96,6 +98,25 @@ def DrawTrack(rootElement, trackData):
                 startPoint = endPoint
 
 
+
+def DrawMesh(rootElement, trackData):
+    points = trackData['points']
+    track = AddTrack(rootElement, trackData['name'])
+
+    if len(points) != 0:
+        startPoint = points[0]
+
+        if len(points) == 1:
+            AddPoint(track, startPoint['lon'], startPoint['lan'])
+
+        elif len(points) > 1:
+            for i in range(0, len(points)):
+                startPoint = points[i]
+                for j in range(i + 1, len(points)):
+                    endPoint = points[j]
+                    DrawSegment(track, startPoint, endPoint)
+
+
 tracks = ReadData()
 
 for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
@@ -104,7 +125,10 @@ for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
         gpx.remove(trk)
 
     for track in tracks:
-        DrawTrack(gpx, track)
+        if drawMesh:
+            DrawMesh(gpx, track)
+        else:
+            DrawTrack(gpx, track)
 
     # Only one gpx in the file.
     break
