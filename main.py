@@ -2,9 +2,9 @@ import xml.etree.ElementTree as ET
 import math
 import json
 
-inFileName = 'e:\\temp\\good.gpx'
-outFileName = 'e:\\temp\\gps.gpx'
-pointFileName = 'e:\\temp\\points.json'
+inFileName = 'c:\\temp\\good.gpx'
+outFileName = 'c:\\temp\\gps.gpx'
+pointFileName = 'c:\\temp\\points.json'
 
 startPoint = dict(lat=26.57, lon=67.2)
 endPoint = dict(lat=26.57, lon=139.2)
@@ -17,7 +17,13 @@ root = tree.getroot()
 
 
 def ReadPoints():
-    return json.loads(pointFileName).points
+    with open(pointFileName) as dataFile:
+        data = json.load(dataFile)
+
+    for track in data['tracks']:
+        print('track :' + str(track))
+
+    return data['tracks']
 
 
 def AddPoint(track, lon, lat):
@@ -63,8 +69,7 @@ def DrawSegment(track, startPoint, endPoint):
         len, lon, lat = AddStep(lon, lat)
 
 
-points = ReadPoints()
-print(str(points))
+tracks = ReadPoints()
 
 for trk in root.iter('{http://www.topografix.com/GPX/1/0}trkseg'):
     # Удал. т. раобтает только для дочерних.
