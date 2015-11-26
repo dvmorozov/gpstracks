@@ -6,9 +6,6 @@ inFileName = 'c:\\temp\\good.gpx'
 outFileName = 'c:\\temp\\gps.gpx'
 pointFileName = 'c:\\temp\\points.json'
 
-startPoint = dict(lat=26.57, lon=67.2)
-endPoint = dict(lat=26.57, lon=139.2)
-
 step = 1.0
 
 ET.register_namespace('', "http://www.topografix.com/GPX/1/0")
@@ -16,7 +13,7 @@ tree = ET.parse(inFileName)
 root = tree.getroot()
 
 
-def ReadPoints():
+def ReadData():
     with open(pointFileName) as dataFile:
         data = json.load(dataFile)
 
@@ -44,6 +41,20 @@ def AddPoint(track, lon, lat):
     point.append(sat)
 
 
+# Returns track segment.
+def AddTrack(rootElement, trackName):
+    track = ET.Element("{http://www.topografix.com/GPX/1/0}trk")
+    name = ET.Element("{http://www.topografix.com/GPX/1/0}name")
+    name.text = trackName
+
+    trkseg = ET.Element("{http://www.topografix.com/GPX/1/0}trkseg")
+    track.append(name)
+    track.append(trkseg)
+
+    rootElement.append(track)
+    return trkseg
+
+
 def DrawSegment(track, startPoint, endPoint):
     deltaLon = endPoint['lon'] - startPoint['lon']
     deltaLat = endPoint['lat'] - startPoint['lat']
@@ -69,15 +80,36 @@ def DrawSegment(track, startPoint, endPoint):
         len, lon, lat = AddStep(lon, lat)
 
 
-tracks = ReadPoints()
+def DrawTrack(rootElement, trackData):
+    points = trackData['points']
+    track = AddTrack(rootElement, trackData['name'])
 
-for trk in root.iter('{http://www.topografix.com/GPX/1/0}trkseg'):
-    # Удал. т. раобтает только для дочерних.
-    for point in trk.findall('{http://www.topografix.com/GPX/1/0}trkpt'):
-        trk.remove(point)
-    DrawSegment(trk, startPoint, endPoint)
+    if len(points) != 0:
+        startPoint = points[0]
 
-for trk in root.iter('{http://www.topografix.com/GPX/1/0}trkpt'):
-    print(trk.attrib)
+        if len(points) == 1:
+            AddPoint(track, startPoint['lon'], startPoint['lan'])
+
+        elif len(points) > 1:
+            for endPoint in points[1:]:
+                DrawSegment(track, startPoint, endPoint)
+                startPoint = endPoint
+
+
+tracks = ReadData()
+
+for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
+    # Removes existing tracks.
+    for trk in gpx.findall('{http://www.topografix.com/GPX/1/0}trk'):
+        gpx.remove(trk)
+
+    for track in tracks:
+        DrawTrack(gpx, track)
+
+    # Only one gpx in the file.
+    break
+
+for trk in root.iter('{http://www.topografix.com/GPX/1/0}trk'):
+    print('trk: ' + str(trk))
 
 tree.write(outFileName)
