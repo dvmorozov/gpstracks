@@ -2,9 +2,9 @@ import xml.etree.ElementTree as ET
 import math
 import json
 
-inFileName = 'c:\\temp\\good.gpx'
-outFileName = 'c:\\temp\\gps.gpx'
-pointFileName = 'c:\\temp\\points.json'
+inFileName = 'e:\\temp\\good.gpx'
+outFileName = 'e:\\temp\\gps.gpx'
+pointFileName = 'e:\\temp\\points.json'
 
 drawMesh = True
 
@@ -13,6 +13,42 @@ step = 1.0
 ET.register_namespace('', "http://www.topografix.com/GPX/1/0")
 tree = ET.parse(inFileName)
 root = tree.getroot()
+
+def DegToRad(angle):
+    return angle * math.pi / 180.0
+
+
+#  Radius is given as 1.
+def SphericalToCartesian(lon, lat):
+    z = math.sin(DegToRad(lat))
+    x = math.cos(DegToRad(lat)) * math.cos(DegToRad(lon))
+    y = math.cos(DegToRad(lat)) * math.sin(DegToRad(lon))
+    return x, y, z
+
+
+def CartesianInnerProduct(v1, v2):
+    print('v1 = ' + str(v1[0]) + ', ' + str(v1[1]) + ', ' + str(v1[2]))
+    print('v2 = ' + str(v2[0]) + ', ' + str(v2[1]) + ', ' + str(v2[2]))
+    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]
+
+
+def SpericalToVector(lon, lat):
+    x, y, z = SphericalToCartesian(lon, lat)
+    v = []
+    v.append(x)
+    v.append(y)
+    v.append(z)
+    return v
+
+
+def PointToVector(p):
+    return SpericalToVector(p['lon'], p['lat'])
+
+
+def AngleBetwee2Points(p1, p2):
+    cos = CartesianInnerProduct(PointToVector(p1), PointToVector(p2))
+    print('cos = ' + str(cos))
+    return math.acos(cos)
 
 
 def ReadData():
@@ -68,7 +104,13 @@ def DrawSegment(track, startPoint, endPoint):
     lon = startPoint['lon']
     lat = startPoint['lat']
 
+    angle = AngleBetwee2Points(startPoint, endPoint)
+    print('angle ' + str(angle * 180 / math.pi))
+
     def AddStep(lon, lat):
+        x, y, z = SphericalToCartesian(lon, lat)
+        print('x, y, z = ', str(x), ', ', str(y), ', ', str(z))
+
         AddPoint(track, lon, lat)
         lon += stepLon
         lat += stepLat
@@ -132,8 +174,5 @@ for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
 
     # Only one gpx in the file.
     break
-
-for trk in root.iter('{http://www.topografix.com/GPX/1/0}trk'):
-    print('trk: ' + str(trk))
 
 tree.write(outFileName)
