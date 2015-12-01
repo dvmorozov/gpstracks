@@ -101,6 +101,11 @@ def PointToVector(p):
 def AngleBetwee2Points(p1, p2):
     cos = CartesianInnerProduct(PointToVector(p1), PointToVector(p2))
     #print('cos = ' + str(cos))
+    # Compensates calculation inaccuracy.
+    if cos < -1:
+        cos = -1
+    if cos > 1:
+        cos = 1
     return math.acos(cos)
 
 
@@ -256,8 +261,8 @@ for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
 
     for track in tracks:
         if drawMesh:
-            #DrawMesh(gpx, track)
-            DrawMeshByNeighbors(gpx, track)
+            DrawMesh(gpx, track)
+            #DrawMeshByNeighbors(gpx, track)
         else:
             DrawTrack(gpx, track)
 
