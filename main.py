@@ -100,7 +100,7 @@ def PointToVector(p):
 
 def AngleBetwee2Points(p1, p2):
     cos = CartesianInnerProduct(PointToVector(p1), PointToVector(p2))
-    print('cos = ' + str(cos))
+    #print('cos = ' + str(cos))
     return math.acos(cos)
 
 
@@ -157,7 +157,7 @@ def AddTrack(rootElement, trackName):
     return trkseg
 
 def AddStep(track, lon, lat, endLon, endLat, n):
-    print('#' + str(n) + ', lon = ' + str(lon) + ', lat = ' + str(lat))
+    #print('#' + str(n) + ', lon = ' + str(lon) + ', lat = ' + str(lat))
     AddPoint(track, lon, lat)
     return RotateStartVector(lon, lat, endLon, endLat)
 
@@ -166,9 +166,6 @@ def DrawSegment(track, startPoint, endPoint):
     # Current values of latitude and longitude.
     lon = startPoint['lon']
     lat = startPoint['lat']
-
-    angle = AngleBetwee2Points(startPoint, endPoint)
-    print('angle between points: ' + str(angle * 180 / math.pi))
 
     n = 0
     # Start point.
@@ -218,6 +215,38 @@ def DrawMesh(rootElement, trackData):
                     DrawSegment(track, startPoint, endPoint)
 
 
+def DrawMeshByNeighbors(rootElement, trackData):
+    points = trackData['points']
+    track = AddTrack(rootElement, trackData['name'])
+
+    if len(points) != 0:
+        startPoint = points[0]
+
+        if len(points) == 1:
+            AddPoint(track, startPoint['lon'], startPoint['lan'])
+
+        elif len(points) > 1:
+            n = 0
+            for i in range(0, len(points)):
+                startPoint = points[i]
+                minAngle = None
+                for j in range(0, len(points)):
+                    if j != i:
+                        endPoint = points[j]
+                        angle = AngleBetwee2Points(startPoint, endPoint)
+                        if minAngle == None or angle < minAngle:
+                            minAngle = angle
+
+                print('min angle between points: ' + str(RadToDeg(minAngle)))
+                for j in range(i + 1, len(points)):
+                    endPoint = points[j]
+                    angle = AngleBetwee2Points(startPoint, endPoint)
+                    if RadToDeg(math.fabs(angle - minAngle)) < step:
+                        print('segment # ' + str(n))
+                        n += 1
+                        DrawSegment(track, startPoint, endPoint)
+
+
 tracks = ReadData()
 
 for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
@@ -227,7 +256,8 @@ for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
 
     for track in tracks:
         if drawMesh:
-            DrawMesh(gpx, track)
+            #DrawMesh(gpx, track)
+            DrawMeshByNeighbors(gpx, track)
         else:
             DrawTrack(gpx, track)
 
