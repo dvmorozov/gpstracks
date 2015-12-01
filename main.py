@@ -53,12 +53,12 @@ def Sign(value):
     return -1 if value < 0 else 1
 
 
-def VectorToSpherical(v):
+def CartesianToSpherical(v):
     x = v[0]
     y = v[1]
     z = v[2]
     lat = math.acos(math.sqrt(x * x + y * y) / math.sqrt(x * x + y * y + z * z)) * Sign(z)
-    lon = math.acos(math.fabs(x) / math.sqrt(x * x + y * y)) * Sign(y)
+    lon = math.acos(x / math.sqrt(x * x + y * y)) * Sign(y)
     return RadToDeg(lon), RadToDeg(lat)
 
 
@@ -111,7 +111,7 @@ def RotateStartVector(startLon, startLat, endLon, endLat):
     z1 = CrossProduct(x1, y1)
     x2 = RotateAround(z1, x1, step)
     z2 = CrossProduct(x2, y1)
-    lon, lat = VectorToSpherical(x2)
+    lon, lat = CartesianToSpherical(x2)
     return CartesianInnerProduct(z2, z1), lon, lat
 
 
