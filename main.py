@@ -8,7 +8,7 @@ pointFileName = 'e:\\temp\\points.json'
 
 drawMesh = True
 
-step = 1.0  # Degrees.
+step = 10.0  # Degrees.
 
 ET.register_namespace('', "http://www.topografix.com/GPX/1/0")
 tree = ET.parse(inFileName)
@@ -30,6 +30,8 @@ def RadToDeg(angle):
 
 
 #  Radius is given as 1.
+#  Latitude from 90 deg (north) to -90 deg (south).
+#  Longitute from 0 to 180 deg (east) and from 0 to -180 deg (west).
 def SphericalToCartesian(lon, lat):
     z = math.sin(DegToRad(lat))
     x = math.cos(DegToRad(lat)) * math.cos(DegToRad(lon))
@@ -199,7 +201,6 @@ def DrawTrack(rootElement, trackData):
             for endPoint in points[1:]:
                 DrawSegment(track, startPoint, endPoint)
                 startPoint = endPoint
-
 
 
 def DrawMesh(rootElement, trackData):
