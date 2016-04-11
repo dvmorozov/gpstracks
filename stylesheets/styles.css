@@ -849,3 +849,7 @@ section #title .credits.right {
     display: none;
   }
 }
+
+body {
+	background-image: url("../images/1.jpg")
+}
