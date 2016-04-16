@@ -1,18 +1,27 @@
 import xml.etree.ElementTree as ET
 import math
 import json
+import sys
+import getopt
 
-inFileName = 'e:\\temp\\good.gpx'
-outFileName = 'e:\\temp\\gps.gpx'
-pointFileName = 'e:\\temp\\points.json'
+templateFileName = None
+outFileName = None
+pointFileName = None
 
 drawMesh = True
 
 step = 10.0  # Degrees.
 
-ET.register_namespace('', "http://www.topografix.com/GPX/1/0")
-tree = ET.parse(inFileName)
-root = tree.getroot()
+tree = None
+root = None
+
+def readTemplate():
+    global tree
+    global root
+    ET.register_namespace('', "http://www.topografix.com/GPX/1/0")
+    tree = ET.parse(templateFileName)
+    root = tree.getroot()
+
 
 def CrossProduct(a, b):
     x = a[1] * b[2] - a[2] * b[1]
@@ -40,8 +49,8 @@ def SphericalToCartesian(lon, lat):
 
 
 def CartesianInnerProduct(v1, v2):
-    #print('v1 = ' + str(v1[0]) + ', ' + str(v1[1]) + ', ' + str(v1[2]))
-    #print('v2 = ' + str(v2[0]) + ', ' + str(v2[1]) + ', ' + str(v2[2]))
+    # print('v1 = ' + str(v1[0]) + ', ' + str(v1[1]) + ', ' + str(v1[2]))
+    # print('v2 = ' + str(v2[0]) + ', ' + str(v2[1]) + ', ' + str(v2[2]))
     return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]
 
 
@@ -102,7 +111,7 @@ def PointToVector(p):
 
 def AngleBetwee2Points(p1, p2):
     cos = CartesianInnerProduct(PointToVector(p1), PointToVector(p2))
-    #print('cos = ' + str(cos))
+    # print('cos = ' + str(cos))
     # Compensates calculation inaccuracy.
     if cos < -1:
         cos = -1
@@ -163,8 +172,9 @@ def AddTrack(rootElement, trackName):
     rootElement.append(track)
     return trkseg
 
+
 def AddStep(track, lon, lat, endLon, endLat, n):
-    #print('#' + str(n) + ', lon = ' + str(lon) + ', lat = ' + str(lat))
+    # print('#' + str(n) + ', lon = ' + str(lon) + ', lat = ' + str(lat))
     AddPoint(track, lon, lat)
     return RotateStartVector(lon, lat, endLon, endLat)
 
@@ -253,21 +263,61 @@ def DrawMeshByNeighbors(rootElement, trackData):
                         DrawSegment(track, startPoint, endPoint)
 
 
-tracks = ReadData()
+def process():
+    readTemplate()
+    tracks = ReadData()
 
-for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
-    # Removes existing tracks.
-    for trk in gpx.findall('{http://www.topografix.com/GPX/1/0}trk'):
-        gpx.remove(trk)
+    for gpx in root.iter('{http://www.topografix.com/GPX/1/0}gpx'):
+        # Removes existing tracks.
+        for trk in gpx.findall('{http://www.topografix.com/GPX/1/0}trk'):
+            gpx.remove(trk)
 
-    for track in tracks:
-        if drawMesh:
-            DrawMesh(gpx, track)
-            #DrawMeshByNeighbors(gpx, track)
-        else:
-            DrawTrack(gpx, track)
+        for track in tracks:
+            if drawMesh:
+                DrawMesh(gpx, track)
+                # DrawMeshByNeighbors(gpx, track)
+            else:
+                DrawTrack(gpx, track)
 
-    # Only one gpx in the file.
-    break
+        # Only one gpx in the file.
+        break
 
-tree.write(outFileName)
+    tree.write(outFileName)
+
+def main():
+    global templateFileName
+    global pointFileName
+    global outFileName
+
+    doc = """Usage main --tf=<template file name> --pf=<point file name> --of=<output file name>"""
+
+    # parse command line options
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "tf=", "pf=", "of="])
+    except getopt.error as msg:
+        print(msg)
+        print("for help use --help")
+        sys.exit(2)
+
+    # process options
+    for o, a in opts:
+        if o in ("-h", "--help"):
+            print(doc)
+            sys.exit(0)
+        if o in "--tf":
+            templateFileName = a
+        if o in "--pf":
+            pointFileName = a
+        if o in "--of":
+            outFileName = a
+
+    # process arguments
+    if templateFileName is not None and pointFileName is not None and outFileName is not None:
+        process()
+    else:
+        print(doc)
+
+
+if __name__ == "__main__":
+    main()
+
