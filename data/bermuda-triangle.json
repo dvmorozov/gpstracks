@@ -1,0 +1,12 @@
+{
+	"tracks" : [
+		{
+			"name" : "bermuda triangle",
+			"points" : [
+				{"lat" : 32.30, "lon" : -64.78},
+				{"lat" : 25.77, "lon" : -80.20},
+				{"lat" : 18.25, "lon" : -66.50}
+				]
+		}
+	]
+}

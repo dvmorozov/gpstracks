@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0"
+xmlns="http://www.topografix.com/GPX/1/0" creator="Polar WebSync 2.3 - www.polar.fi"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+  <time>2011-09-22T18:56:51Z</time>
+  <trk>
+    <name>exercise</name>
+    <trkseg>
+      <trkpt lat="26.57" lon="67.20">
+        <time>2011-09-22T18:56:51Z</time>
+        <fix>2d</fix>
+        <sat>5</sat>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
