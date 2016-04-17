@@ -10,7 +10,7 @@ pointFileName = None
 
 drawMesh = True
 
-step = 10.0  # Degrees.
+step = 1.0      # Degrees.
 
 tree = None
 root = None
@@ -288,12 +288,14 @@ def main():
     global templateFileName
     global pointFileName
     global outFileName
+    global step
 
-    doc = """Usage main --tf=<template file name> --pf=<point file name> --of=<output file name>"""
+    doc = """Usage gpstracks --tf=<template file name> --pf=<point file name>
+            --of=<output file name> --step=<angle step in degrees>"""
 
     # parse command line options
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "tf=", "pf=", "of="])
+        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "tf=", "pf=", "of=", "step="])
     except getopt.error as msg:
         print(msg)
         print("for help use --help")
@@ -310,6 +312,8 @@ def main():
             pointFileName = a
         if o in "--of":
             outFileName = a
+        if o in "--step":
+            step = float(a)
 
     # process arguments
     if templateFileName is not None and pointFileName is not None and outFileName is not None:
