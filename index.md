@@ -1,14 +1,33 @@
-### Welcome to GitHub Pages.
-This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here [using GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/), select a template crafted by a designer, and publish. After your page is generated, you can check out the new `gh-pages` branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.
+### Welcome to Gpstracks
 
-### Designer Templates
-We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.
+This command-line utility allows generating tracks on the surface of Earth by means a few reference points. Generated tracks can be viewed by means, for example, Google Earth. The utility generates intermediate coordinates using given points as vertexes. By such way you can outline some region or draw lines on the surface of Earth. Tracks are stored in standard format and you can use any software capable to read these data.
 
-### Creating pages manually
-If you prefer to not use the automatic generator, push a branch named `gh-pages` to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.
+### Example Track
 
-### Authors and Contributors
-You can @mention a GitHub username to generate a link to their profile. The resulting `<a>` element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (@defunkt), PJ Hyett (@pjhyett), and Tom Preston-Werner (@mojombo) founded GitHub.
+As an example I built boundaries of Bermuda Triangle and uploaded them to Google Earth.
 
-### Support or Contact
-Having trouble with Pages? Check out our [documentation](https://help.github.com/pages) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+[Bermuda Triangle](images/bermuda-triangle.png)
+
+Here are [Bermuda Triangle coordinates](data/bermuda-triangle.json) and resulting [GPS track](data/output.gpx).
+
+### Usage
+
+The utility consumes set of vertexes of the track as JSON-file. Longitude and latitude must be assigned in range from -180 to 180 degrees. Negative values correspond to western longitudes and southern latitudes.
+
+[JSON example](data/bermuda-triangle.json)
+
+The utility requires template file to get track file in standard form.
+
+[Template example](data/template.gpx)
+
+Usage _gpstracks --tf=<template file name> --pf=<point file name> --of=<output file name> --step=<angle step in degrees>_.
+
+[Download executable](data/gpstracks.zip)
+
+### Find me on
+
+[LinkedIn](https://www.linkedin.com/in/dmitry-morozov-79490a59/)
+
+[Facebook](https://www.facebook.com/dmitry.v.morozov)
+
+
