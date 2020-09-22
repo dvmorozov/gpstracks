@@ -1,10 +1,10 @@
 ### Welcome to Gpstracks
 
-This command-line utility allows generating tracks on the surface of Earth by means a few reference points. Generated tracks can be viewed by means, for example, Google Earth. The utility generates intermediate coordinates using given points as vertexes. By such way you can outline some region or draw lines on the surface of Earth. Tracks are stored in standard format and you can use any software capable to read these data.
+This command-line utility allows generating tracks on the surface of Earth by means a few reference points. Generated tracks can be viewed by means, for example, Google Earth. The utility generates intermediate coordinates using given points as vertexes. By this way you can outline some region or draw lines on the surface of Earth. Tracks are stored in standard format and you can use any software capable to read these data.
 
 ### Example Track
 
-As an example I built boundaries of Bermuda Triangle and uploaded them to Google Earth.
+As an example I've built boundaries of Bermuda Triangle and uploaded them to Google Earth.
 
 ![Bermuda Triangle](images/bermuda-triangle.png)
 
