@@ -16,18 +16,18 @@ The utility consumes set of vertexes of the track as JSON-file. Longitude and la
 
 [JSON example](data/bermuda-triangle.json)
 
-The utility requires template file to get track file in standard form.
+The utility requires template file to produce track file in standard form.
 
 [Template example](data/template.gpx)
 
-Usage _gpstracks --tf=&lt;template file name&gt; --pf=&lt;point file name&gt; --of=&lt;output file name&gt; --step=&lt;angle step in degrees&gt;_.
+Usage 
+
+> gpstracks --tf=&lt;template file name&gt; --pf=&lt;point file name&gt; --of=&lt;output file name&gt; --step=&lt;angle step in degrees&gt;
 
 [Download executable](data/gpstracks.zip)
 
 ### Find me on
 
-[LinkedIn](https://www.linkedin.com/in/dmitry-morozov-79490a59/)
-
-[Facebook](https://www.facebook.com/dmitry.v.morozov)
+[LinkedIn](https://www.linkedin.com/in/dmitry-morozov-79490a59/) [Facebook](https://www.facebook.com/dmitry.v.morozov)
 
 
