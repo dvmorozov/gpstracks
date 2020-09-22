@@ -6,7 +6,7 @@ This command-line utility allows generating tracks on the surface of Earth by me
 
 As an example I built boundaries of Bermuda Triangle and uploaded them to Google Earth.
 
-[Bermuda Triangle](images/bermuda-triangle.png)
+![Bermuda Triangle](images/bermuda-triangle.png)
 
 Here are [Bermuda Triangle coordinates](data/bermuda-triangle.json) and resulting [GPS track](data/output.gpx).
 
@@ -20,7 +20,7 @@ The utility requires template file to get track file in standard form.
 
 [Template example](data/template.gpx)
 
-Usage _gpstracks --tf=<template file name> --pf=<point file name> --of=<output file name> --step=<angle step in degrees>_.
+Usage _gpstracks --tf=&lt;template file name&gt; --pf=&lt;point file name&gt; --of=&lt;output file name&gt; --step=&lt;angle step in degrees&gt;_.
 
 [Download executable](data/gpstracks.zip)
 
